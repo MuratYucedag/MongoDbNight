@@ -29,5 +29,25 @@ namespace MongoDbNight.Controllers
             await _categoryService.CreateCategoryAsync(createCategoryDto);
             return RedirectToAction("CategoryList");
         }
+        
+        public async Task<IActionResult> DeleteCategory(string id)
+        {
+            await _categoryService.DeleteCategoryAsync(id);
+            return RedirectToAction("CategoryList");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> UpdateCategory(string id)
+        {
+            var value = await _categoryService.GetByIdCategoryAsync(id);
+            return View(value);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UpdateCategory(UpdateCategoryDto updateCategoryDto)
+        {
+            await _categoryService.UpdateCategoryAsync(updateCategoryDto);
+            return RedirectToAction("CategoryList");
+        }
     }
 }
