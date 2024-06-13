@@ -17,29 +17,29 @@ namespace MongoDbNight.Services.ProductServices
             _productCollection = database.GetCollection<Product>(_databaseSettins.ProductCollectionName);
             _mapper = mapper;
         }
-        public Task CreateProductAsync(CreateProductDto createProductDto)
+        public async Task CreateProductAsync(CreateProductDto createProductDto)
         {
-            throw new NotImplementedException();
+            var value = _mapper.Map<Product>(createProductDto);
+            await _productCollection.InsertOneAsync(value);
         }
-
-        public Task DeleteProductAsync(string id)
+        public async Task DeleteProductAsync(string id)
         {
-            throw new NotImplementedException();
+            await _productCollection.DeleteOneAsync(x => x.ProductId == id);
         }
-
-        public Task<List<ResultProductDto>> GetAllProductAsync()
+        public async Task<List<ResultProductDto>> GetAllProductAsync()
         {
-            throw new NotImplementedException();
+            var values = await _productCollection.Find(x => true).ToListAsync();
+            return _mapper.Map<List<ResultProductDto>>(values);
         }
-
-        public Task<GetByIdProductDto> GetByIdProductAsync(string id)
+        public async Task<GetByIdProductDto> GetByIdProductAsync(string id)
         {
-            throw new NotImplementedException();
+            var values = await _productCollection.Find<Product>(x => x.ProductId == id).FirstOrDefaultAsync();
+            return _mapper.Map<GetByIdProductDto>(values);
         }
-
-        public Task UpdateProductAsync(UpdateProductDto updateProductDto)
+        public async Task UpdateProductAsync(UpdateProductDto updateProductDto)
         {
-            throw new NotImplementedException();
+            var values = _mapper.Map<Product>(updateProductDto);
+            await _productCollection.FindOneAndReplaceAsync(x => x.ProductId == updateProductDto.ProductId, values);
         }
     }
 }
